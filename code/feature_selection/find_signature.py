@@ -10,8 +10,8 @@ numpy.random.seed(42)
 ### mini-project.
 words_file = "../text_learning/your_word_data.pkl" 
 authors_file = "../text_learning/your_email_authors.pkl"
-word_data = pickle.load( open(words_file, "r"))
-authors = pickle.load( open(authors_file, "r") )
+word_data = pickle.load( open(words_file, "rb"))
+authors = pickle.load( open(authors_file, "rb") )
 
 
 
@@ -39,5 +39,32 @@ labels_train   = labels_train[:150]
 
 ### your code goes here
 
+from sklearn import tree
+from sklearn.metrics import accuracy_score
 
+clf = tree.DecisionTreeClassifier()
+clf.fit(features_train, labels_train)
+pred = clf.predict(features_test)
+accuracy = accuracy_score(labels_test, pred)
+print ("accuracy:", accuracy)
 
+feature_importance = clf.feature_importances_
+print(len(feature_importance))
+print("max importance", max(feature_importance))
+print("max important feature", numpy.where(feature_importance == max(feature_importance)))
+
+imp_features = []
+for feature in feature_importance:
+    if feature > 0.2:
+        imp_features.append(feature)
+
+print("features above threshold", len(imp_features))
+idx_imp_feature = numpy.where(feature_importance > 0.2)
+print("index of important features ", idx_imp_feature)
+
+#for feature in feature_importance:
+    
+all_features = vectorizer.get_feature_names()
+
+for idx in idx_imp_feature:
+    print ("important feature name ", all_features[idx])

@@ -47,7 +47,7 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
         words = parseOutText(email)
         ### use str.replace() to remove any instances of the words
         ### ["sara", "shackleton", "chris", "germani"]
-        words =words.replace("sara","").replace("shackleton","").replace("chris","").replace("germani","")
+        words =words.replace("sara","").replace("shackleton","").replace("chris","").replace("germani","").replace("sshacklensf", "").replace("cgermannsf","")
         ### append the text to word_data
         word_data.append(words)
         ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
@@ -73,5 +73,5 @@ vectorizer = TfidfVectorizer(stop_words='english')
 transform = vectorizer.fit_transform(word_data)
 features = vectorizer.get_feature_names()
 
-print("features type:", type(features))
-print("features @34597:", features[34597])
+#print("features type:", type(features))
+#print("features @34597:", features[34597])
