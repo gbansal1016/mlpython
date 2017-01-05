@@ -53,7 +53,7 @@ for line in lines:
 print("Number of POI: %d" , count)      
 
 print("Stock value for Mr. James Prentice %f", enron_data["PRENTICE JAMES"]["total_stock_value"])
-print("Stock value for Mr. Wesley Colwell %d", enron_data["Colwell Wesley".upper()]["from_messages"])
+print("Stock value for Mr. Wesley Colwell %d", enron_data["Colwell Wesley".upper()]["total_stock_value"])
 print("Stock options exercised by Mr. Skilling %d", enron_data["SKILLING JEFFREY K"]["exercised_stock_options"])
 
 print("Total Payments to Mr. Skilling %d", enron_data["SKILLING JEFFREY K"]["total_payments"])
