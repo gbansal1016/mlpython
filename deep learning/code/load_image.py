@@ -77,7 +77,7 @@ def make_arrays(nb_rows, img_size):
   else:
     dataset, labels = None, None
   return dataset, labels
-
+  
 def merge_datasets(pickle_files, train_size, valid_size=0):
   num_classes = len(pickle_files)
   valid_dataset, valid_labels = make_arrays(valid_size, image_size)
@@ -131,8 +131,6 @@ train_folders = maybe_extract(train_filename)
 test_folders = maybe_extract(test_filename)  
 train_datasets = maybe_pickle(train_folders, 45000)
 
-
-
 test_datasets = maybe_pickle(test_folders, 1800)
 
 display(Image(filename=dir_name+"notMNIST_small/A/Q0NXaWxkV29yZHMtQm9sZEl0YWxpYy50dGY=.png"))
@@ -183,17 +181,31 @@ logit = LogisticRegression()
 
 train_set = np.reshape(train_dataset, (samples, width*height))
 
-logit.fit(train_set[0:5000,:], train_labels[0:5000])
+logit.fit(train_set[0:10000,:], train_labels[0:10000])
 
 (samples, width, height) = test_dataset.shape
-
 
 test_set = np.reshape(test_dataset, (samples, width*height))
 
 pred = logit.predict(test_set[0:1000,:])
-print(logit.coef_)
 
 from sklearn.metrics import accuracy_score
 
 accuracy = accuracy_score(test_labels[0:1000], pred)
 print('accuracy', accuracy)
+
+
+fig = plt.figure()
+fig.set_size_inches(10, 2)
+
+num_classes = len(train_datasets)
+filters = np.ndarray(shape=(num_classes, width, height), dtype=np.float32)
+
+for class_i in range(0,(num_classes)):
+    filters[class_i, :, :] = logit.coef_.reshape(num_classes, width, height)[class_i]
+    a = fig.add_subplot(1, 10, (class_i+1))
+    a.set_title('class:%s' % (class_i+1))
+    plt.imshow(filters[class_i])
+    plt.axis('off')
+    plt.show()
+    
