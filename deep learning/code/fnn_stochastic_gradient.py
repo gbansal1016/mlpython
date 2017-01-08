@@ -59,7 +59,6 @@ def accuracy(predictions, labels):
           / predictions.shape[0])
 
 batch_size = 128
-hidden_nodes = 1000
 
 graph = tf.Graph()
 with graph.as_default():
@@ -73,44 +72,25 @@ with graph.as_default():
   tf_test_dataset = tf.constant(test_dataset)
   
   # Variables.
-  hidden1_weights = tf.Variable(
-    tf.truncated_normal([image_size * image_size, hidden_nodes]))
-  hidden1_biases = tf.Variable(tf.zeros([hidden_nodes]))
-  
-  hidden1 = tf.nn.relu(tf.matmul(tf_train_dataset, hidden1_weights) + hidden1_biases)
-
-  hidden2_weights = tf.Variable(
-    tf.truncated_normal([hidden_nodes, hidden_nodes]))
-  hidden2_biases = tf.Variable(tf.zeros([hidden_nodes]))
-  
-  hidden2 = tf.nn.relu(tf.matmul(hidden1, hidden2_weights) + hidden2_biases)
-  
-  # Variables.
-  weights = tf.Variable(tf.truncated_normal([hidden_nodes, num_labels]))
+  weights = tf.Variable(
+    tf.truncated_normal([image_size * image_size, num_labels]))
   biases = tf.Variable(tf.zeros([num_labels]))
-
-  print("no error till here")
+  
   # Training computation.
-  logits = tf.matmul(hidden2, weights) + biases
+  logits = tf.matmul(tf_train_dataset, weights) + biases
   loss = tf.reduce_mean(
     tf.nn.softmax_cross_entropy_with_logits(labels=tf_train_labels, logits=logits))
   
   # Optimizer.
-  optimizer = tf.train.GradientDescentOptimizer(0.04).minimize(loss)
+  optimizer = tf.train.GradientDescentOptimizer(0.5).minimize(loss)
   
-  print("no error till optimization")
   # Predictions for the training, validation, and test data.
   train_prediction = tf.nn.softmax(logits)
+  valid_prediction = tf.nn.softmax(
+    tf.matmul(tf_valid_dataset, weights) + biases)
+  test_prediction = tf.nn.softmax(tf.matmul(tf_test_dataset, weights) + biases)
   
-  hidden1_output = tf.nn.relu(tf.matmul(tf_valid_dataset, hidden1_weights) + hidden1_biases)
-  hidden2_output = tf.nn.relu(tf.matmul(hidden1_output, hidden2_weights) + hidden2_biases)
-  valid_prediction = tf.nn.softmax(tf.matmul(hidden2_output, weights) + biases)
-  
-  hidden1_output = tf.nn.relu(tf.matmul(tf_test_dataset, hidden1_weights) + hidden1_biases)
-  hidden2_output = tf.nn.relu(tf.matmul(hidden1_output, hidden2_weights) + hidden2_biases)
-  test_prediction = tf.nn.softmax(tf.matmul(hidden2_output, weights) + biases)
-  
-num_steps = 30001
+num_steps = 3001
 
 with tf.Session(graph=graph) as session:
   tf.global_variables_initializer().run()
