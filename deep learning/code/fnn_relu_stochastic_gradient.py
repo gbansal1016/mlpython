@@ -73,20 +73,18 @@ with graph.as_default():
   tf_test_dataset = tf.constant(test_dataset)
   
   # Variables.
-  hidden1_weights = tf.Variable(
-    tf.truncated_normal([image_size * image_size, hidden_nodes]))
+  hidden1_weights = tf.Variable(tf.truncated_normal([image_size * image_size, hidden_nodes], stddev=0.1))
   hidden1_biases = tf.Variable(tf.zeros([hidden_nodes]))
   
   hidden1 = tf.nn.relu(tf.matmul(tf_train_dataset, hidden1_weights) + hidden1_biases)
 
-  hidden2_weights = tf.Variable(
-    tf.truncated_normal([hidden_nodes, hidden_nodes]))
+  hidden2_weights = tf.Variable(tf.truncated_normal([hidden_nodes, hidden_nodes], stddev=0.1))
   hidden2_biases = tf.Variable(tf.zeros([hidden_nodes]))
   
   hidden2 = tf.nn.relu(tf.matmul(hidden1, hidden2_weights) + hidden2_biases)
   
   # Variables.
-  weights = tf.Variable(tf.truncated_normal([hidden_nodes, num_labels]))
+  weights = tf.Variable(tf.truncated_normal([hidden_nodes, num_labels], stddev=0.1))
   biases = tf.Variable(tf.zeros([num_labels]))
 
   print("no error till here")
